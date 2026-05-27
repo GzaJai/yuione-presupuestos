@@ -138,12 +138,12 @@ export default function LandingPage({ onStart }) {
         </section>
       </main>
 
-      <footer className="text-center text-[10px] text-text-secondary/50 py-6 border-t border-card-border/50 transition-colors duration-200">
-        <a className='text-primary font-brand' href="https://yuione.com.ar" target='_blank'>
+      <footer className="text-center text-sm text-text-secondary/50 py-6 border-t border-card-border/50 transition-colors duration-200">
+        <a className='text-primary font-brand font-semibold' href="https://yuione.com.ar" target='_blank'>
           YUI ONE {" "}
         </a>
           — Hecho por
-        <a  target='_blank' href='https://www.gonzalojaime.me/' className="text-text-secondary"> Gonzalo Jaime</a>
+        <a  target='_blank' href='https://www.gonzalojaime.me/' className="text-text-secondary"> Gonzalo Jaime Guiñazú</a>
       </footer>
     </div>
   );
