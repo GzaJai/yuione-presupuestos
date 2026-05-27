@@ -8,7 +8,7 @@ import Modal from '../ui/Modal';
 /**
  * Listado de presupuestos guardados con acciones: descargar PDF y eliminar.
  *
- * @param {{ budgets: Array, profile: object, onDelete: (id: number) => void, onSelect?: (id: number) => void }} props
+ * @param {{ budgets: Array, profile: object, onDelete: (id: number) => void, onSelect?: (budget: object) => void }} props
  */
 export default function BudgetHistory({ budgets = [], profile, onDelete, onSelect }) {
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -61,7 +61,7 @@ export default function BudgetHistory({ budgets = [], profile, onDelete, onSelec
             {/* Info */}
             <div
               className="flex-1 min-w-0 cursor-pointer"
-              onClick={() => onSelect?.(budget.id)}
+              onClick={() => onSelect?.(budget)}
             >
               <p className="text-sm font-medium text-text-primary truncate">
                 {budget.title || 'Sin título'}

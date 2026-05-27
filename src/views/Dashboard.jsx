@@ -1,9 +1,10 @@
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Plus, Download, Upload, UserRound, LogOut } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import ThemeToggle from '../components/ui/ThemeToggle';
 import BudgetHistory from '../components/features/BudgetHistory';
+import BudgetDetailModal from '../components/features/BudgetDetailModal';
 
 /**
  * Pantalla principal después del onboarding.
@@ -30,6 +31,7 @@ export default function Dashboard({
   onReset,
 }) {
   const fileInputRef = useRef(null);
+  const [selectedBudget, setSelectedBudget] = useState(null);
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -41,6 +43,14 @@ export default function Dashboard({
       onImport(file);
       e.target.value = '';
     }
+  };
+
+  const handleSelectBudget = (budget) => {
+    setSelectedBudget(budget);
+  };
+
+  const handleCloseDetail = () => {
+    setSelectedBudget(null);
   };
 
   return (
@@ -113,9 +123,18 @@ export default function Dashboard({
             budgets={budgets}
             profile={profile}
             onDelete={onDeleteBudget}
+            onSelect={handleSelectBudget}
           />
         </Card>
       </main>
+
+      {/* ── Modal de detalle del presupuesto ── */}
+      <BudgetDetailModal
+        budget={selectedBudget}
+        profile={profile}
+        open={!!selectedBudget}
+        onClose={handleCloseDetail}
+      />
     </div>
   );
 }

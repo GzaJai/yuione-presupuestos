@@ -130,3 +130,25 @@ input[type="number"] {
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
 }
+
+/* ─── Print: ocultar elementos de UI de la app ─── */
+@media print {
+  /* Ocultar todo lo decorativo / navegación de la app */
+  header,
+  footer,
+  nav,
+  .no-print,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

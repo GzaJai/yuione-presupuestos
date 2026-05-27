@@ -20,18 +20,20 @@ function addDays(isoDate, days) {
 let pendingPromise = null;
 
 /**
- * Genera y descarga un PDF del presupuesto usando jsPDF directamente.
+ * Genera un PDF del presupuesto usando jsPDF y lo abre en una nueva pestaña
+ * como vista previa (Blob URL).
  *
- * @param {object} budget  — Datos del presupuesto
- * @param {object} profile — Datos del perfil (emisor)
+ * @param {object}  budget              — Datos del presupuesto
+ * @param {object}  profile             — Datos del perfil (emisor)
+ * @param {boolean} [showSignatureSpace=true] — Si se renderiza la línea de firma
  * @returns {Promise<void>}
  */
-export async function generatePDFFromTemplate(budget, profile) {
+export async function generatePDFFromTemplate(budget, profile, showSignatureSpace = true) {
   if (pendingPromise) {
     await pendingPromise;
   }
 
-  pendingPromise = generateInternal(budget, profile);
+  pendingPromise = generateInternal(budget, profile, showSignatureSpace);
   try {
     await pendingPromise;
   } finally {
@@ -39,7 +41,7 @@ export async function generatePDFFromTemplate(budget, profile) {
   }
 }
 
-async function generateInternal(budget, profile) {
+async function generateInternal(budget, profile, showSignatureSpace) {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
 
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -218,19 +220,21 @@ async function generateInternal(budget, profile) {
   // 4. FIRMA, CONTACTO Y QR
   // ══════════════════════════════════════════════
 
-  const tableEndY = ensureSpace(35);
-  const finalY = Math.max(tableEndY, (doc.lastAutoTable?.finalY ?? tableEndY) + 15);
+  const tableEndY = ensureSpace(40);
+  const finalY = tableEndY + 15;
 
-  // -- Firma (izquierda) --
-  const signatureW = 48; // ~ w-48 (48mm)
-  doc.setDrawColor(148, 163, 184); // slate-400
-  doc.setLineWidth(0.5);
-  doc.line(margin, finalY, margin + signatureW, finalY);
+  // -- Firma (izquierda) — OPCIONAL --
+  if (showSignatureSpace) {
+    const signatureW = 48; // ~ w-48 (48mm)
+    doc.setDrawColor(148, 163, 184); // slate-400
+    doc.setLineWidth(0.5);
+    doc.line(margin, finalY, margin + signatureW, finalY);
 
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(100, 116, 139); // slate-500
-  doc.text('Firma del Emisor', margin + signatureW / 2, finalY + 5, { align: 'center' });
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 116, 139); // slate-500
+    doc.text('Firma del Emisor', margin + signatureW / 2, finalY + 5, { align: 'center' });
+  }
 
   // -- QR real (derecha) --
   const qrSize = 16; // 16mm
@@ -269,10 +273,36 @@ async function generateInternal(budget, profile) {
   const linkY = finalY + 10 - 2; // ajuste fino
   doc.link(linkX, linkY, linkW, linkH, { url: 'https://presupuetos.yuione.com.ar/' });
 
-  // ── Nombre del archivo ──
+  // ── Setear metadata del PDF con nombre formateado: fecha-nombre-cliente ──
   const dateStr = budget.createdAt
     ? budget.createdAt.slice(0, 10)
     : new Date().toISOString().slice(0, 10);
 
-  doc.save(`${budget.title || 'Presupuesto'}-${dateStr}.pdf`);
+  const nameSlug = slugify(profile.businessName || profile.name || 'presupuesto');
+  const clientSlug = slugify(budget.clientName || 'sin-cliente');
+  const pdfTitle = `${dateStr}-${nameSlug}-${clientSlug}`;
+
+  doc.setProperties({ title: pdfTitle });
+
+  // ── Abrir en nueva pestaña como vista previa ──
+  const pdfBlob = doc.output('blob');
+  const blobUrl = URL.createObjectURL(pdfBlob);
+  window.open(blobUrl, '_blank');
+}
+
+/**
+ * Convierte un texto en un slug seguro para nombres de archivo.
+ * Ej: "Mi Empresa S.A." → "mi-empresa-sa"
+ */
+function slugify(text) {
+  if (typeof text !== 'string') return 'unknown';
+  return text
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')                  // separa acentos de letras
+    .replace(/[\u0300-\u036f]/g, '')   // elimina diacríticos
+    .replace(/[^a-z0-9\s-]/g, '')      // solo letras, números, espacios, guiones
+    .replace(/\s+/g, '-')              // espacios → guiones
+    .replace(/-+/g, '-')               // guiones múltiples → uno solo
+    .replace(/^-|-$/g, '');            // saca guiones al inicio/final
 }

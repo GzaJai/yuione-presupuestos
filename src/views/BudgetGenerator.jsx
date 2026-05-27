@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, FileDown, Save } from 'lucide-react';
+import { ArrowLeft, FileDown, Save, Eye } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
@@ -11,6 +11,7 @@ import ThemeToggle from '../components/ui/ThemeToggle';
 import { useClients } from '../hooks/useClients';
 import { calcTotal } from '../utils/formatters';
 import { generatePDFFromTemplate } from '../utils/htmlPdfGenerator';
+import { openPrintPreview } from '../utils/printPreview';
 
 const DUE_DAYS_OPTIONS = [
   { value: '', label: '— Seleccionar —' },
@@ -106,6 +107,7 @@ export default function BudgetGenerator({ profile, onBack, onSave }) {
     }
   };
 
+  const [showSignatureSpace, setShowSignatureSpace] = useState(true);
   const [generatingPdf, setGeneratingPdf] = useState(false);
 
   const handleDownloadPDF = async () => {
@@ -119,11 +121,32 @@ export default function BudgetGenerator({ profile, onBack, onSave }) {
         total,
         createdAt: new Date().toISOString(),
       };
-      await generatePDFFromTemplate(data, profile);
+      await generatePDFFromTemplate(data, profile, showSignatureSpace);
     } catch (err) {
       console.error('Error generating PDF:', err);
     } finally {
       setGeneratingPdf(false);
+    }
+  };
+
+  const [generatingPrint, setGeneratingPrint] = useState(false);
+
+  const handlePrintPreview = async () => {
+    if (generatingPrint) return;
+    setGeneratingPrint(true);
+    try {
+      const data = {
+        title: title.trim() || 'Presupuesto',
+        ...getClient(),
+        items,
+        total,
+        createdAt: new Date().toISOString(),
+      };
+      await openPrintPreview(data, profile, showSignatureSpace);
+    } catch (err) {
+      console.error('Error opening print preview:', err);
+    } finally {
+      setGeneratingPrint(false);
     }
   };
 
@@ -209,8 +232,30 @@ export default function BudgetGenerator({ profile, onBack, onSave }) {
           <BudgetTable items={items} onChange={setItems} />
         </Card>
 
+        {/* ── Opciones de descarga ── */}
+        <div className="flex items-center justify-between print:hidden">
+          <label className="flex items-center gap-2 text-xs text-text-secondary cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={showSignatureSpace}
+              onChange={(e) => setShowSignatureSpace(e.target.checked)}
+              className="w-4 h-4 rounded border-input-border bg-input-bg text-primary accent-primary cursor-pointer"
+            />
+            Incluir espacio de firma
+          </label>
+        </div>
+
         {/* ── Acciones ── */}
         <div className="flex flex-col sm:flex-row gap-2 pt-2">
+          <Button
+            variant="secondary"
+            onClick={handlePrintPreview}
+            disabled={generatingPrint}
+            className="flex-1"
+          >
+            <Eye size={16} />
+            {generatingPrint ? 'Generando…' : 'Vista Previa'}
+          </Button>
           <Button
             variant="secondary"
             onClick={handleDownloadPDF}

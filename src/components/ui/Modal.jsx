@@ -4,9 +4,9 @@ import { X } from 'lucide-react';
 /**
  * Modal con overlay, cierre por ESC y click fuera.
  *
- * @param {{ open: boolean, onClose: () => void, title?: string, children }} props
+ * @param {{ open: boolean, onClose: () => void, title?: string, contentClassName?: string, children }} props
  */
-export default function Modal({ open, onClose, title, children }) {
+export default function Modal({ open, onClose, title, contentClassName = '', children }) {
   const handleKeyDown = useCallback(
     (e) => {
       if (e.key === 'Escape') onClose();
@@ -37,7 +37,7 @@ export default function Modal({ open, onClose, title, children }) {
 
       {/* Content */}
       <div
-        className="relative z-10 w-full max-w-md rounded-xl border border-card-border bg-card p-6 shadow-2xl animate-fade-in-up transition-colors duration-200"
+        className={`relative z-10 w-full max-w-md rounded-xl border border-card-border bg-card p-6 shadow-2xl animate-fade-in-up transition-colors duration-200 ${contentClassName}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
