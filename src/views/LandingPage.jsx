@@ -1,5 +1,6 @@
-import { ArrowRight, Shield, FileText, Smartphone,ExternalLink, Layers } from 'lucide-react';
+import { ArrowRight, Shield, FileText, Smartphone, ExternalLink } from 'lucide-react';
 import Button from '../components/ui/Button';
+import ThemeToggle from '../components/ui/ThemeToggle';
 import logoYuiOne from '../assets/yuione.png'
 
 /**
@@ -18,9 +19,12 @@ export default function LandingPage({ onStart }) {
         <span className="font-brand text-base font-bold text-primary tracking-wide">
           YUI ONE
         </span>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
         <Button variant="ghost" size="sm" onClick={onStart}>
           Ingresar
         </Button>
+        </div>
       </header>
 
       <main className="flex-1 flex flex-col items-center px-4 sm:px-6 pt-12 sm:pt-20 pb-16 max-w-2xl mx-auto w-full">
@@ -46,7 +50,7 @@ export default function LandingPage({ onStart }) {
         </section>
 
         {/* ── Características ── */}
-        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full mb-16">
+        <section className="grid grid-cols-2 sm:grid-cols-2 gap-4 w-full mb-16">
           {[
             {
               icon: FileText,
@@ -57,12 +61,7 @@ export default function LandingPage({ onStart }) {
               icon: Shield,
               title: 'Privacidad total',
               desc: 'Tus datos nunca salen de tu dispositivo. Sin servidores, sin nube.',
-            },
-            {
-              icon: Smartphone,
-              title: 'Mobile First',
-              desc: 'Diseñada para usarse desde el celular, rápida y liviana.',
-            },
+            }
           ].map((feat) => (
             <div
               key={feat.title}
@@ -113,15 +112,15 @@ export default function LandingPage({ onStart }) {
         <section className="mt-20 mb-12 flex flex-col items-center justify-center text-center px-4">
           <div className="flex flex-col items-center gap-2 mb-3">
             <img src={logoYuiOne} alt="Logo de yui one" className='w-32' />
-            <h2 className="text-3xl font-bold text-white tracking-[0.2em] uppercase font-brand">
+            <h2 className="text-3xl font-bold text-text-primary tracking-[0.2em] uppercase font-brand">
               YUI ONE
             </h2>
           </div>
 
-          <p className="text-[#A3A3A3] max-w-md text-sm md:text-base mb-6 leading-relaxed">
+          <p className="text-text-secondary max-w-md text-sm md:text-base mb-6 leading-relaxed">
             ¿Necesitás ir más allá de los presupuestos?
           </p>
-          <p className="text-[#A3A3A3] max-w-md text-sm md:text-base mb-6 leading-relaxed">
+          <p className="text-text-secondary max-w-md text-sm md:text-base mb-6 leading-relaxed">
             Conocé nuestro Sistema Integral de Gestión Empresarial. Todo tu entorno de trabajo, centralizado y simplificado.
           </p>
 
@@ -129,7 +128,7 @@ export default function LandingPage({ onStart }) {
             href="https://yuione.com.ar"
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-2 text-[15px] font-semibold text-[#FF0505] hover:text-white duration-300 hover:-translate-y-1"
+            className="group flex items-center gap-2 text-[15px] font-semibold text-primary hover:text-text-primary duration-300 hover:-translate-y-1"
           >
             <span>Visitalo acá</span>
             <ExternalLink 
@@ -140,8 +139,11 @@ export default function LandingPage({ onStart }) {
       </main>
 
       <footer className="text-center text-[10px] text-text-secondary/50 py-6 border-t border-card-border/50 transition-colors duration-200">
-        YUI ONE — Hecho por{' '}
-        <span className="text-text-secondary">Gonzalo Jaime</span>
+        <a className='text-primary font-brand' href="https://yuione.com.ar" target='_blank'>
+          YUI ONE {" "}
+        </a>
+          — Hecho por
+        <a  target='_blank' href='https://www.gonzalojaime.me/' className="text-text-secondary"> Gonzalo Jaime</a>
       </footer>
     </div>
   );
