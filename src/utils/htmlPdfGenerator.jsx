@@ -20,7 +20,6 @@ let pendingPromise = null;
 
 /**
  * Genera y descarga un PDF del presupuesto usando jsPDF directamente.
- * Sin html2canvas, sin oklch, sin vueltas.
  *
  * @param {object} budget  — Datos del presupuesto
  * @param {object} profile — Datos del perfil (emisor)
@@ -43,109 +42,131 @@ async function generateInternal(budget, profile) {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
 
   const pageWidth = doc.internal.pageSize.getWidth();
-  const margin = 14;
+  const margin = 15;
   const contentWidth = pageWidth - margin * 2;
 
-  // ── Helper: footer con número de página ──
-  const addFooter = () => {
-    const pageCount = doc.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setTextColor(130);
-      doc.text(
-        `Página ${i} de ${pageCount} — Generado el ${formatDateShort(new Date().toISOString())}`,
-        margin,
-        doc.internal.pageSize.getHeight() - 10,
-      );
-    }
-  };
-
-  // ── Helper: verificar si hay espacio para lo que sigue ──
-  const checkPageBreak = (neededHeight) => {
+  // ── Helper: verificar espacio antes de un bloque ──
+  const ensureSpace = (neededHeight, fallbackY) => {
     const pageHeight = doc.internal.pageSize.getHeight();
-    const currentY = doc.lastAutoTable?.finalY ?? doc.getY();
+    const currentY = doc.lastAutoTable?.finalY ?? fallbackY ?? cursorY;
     if (currentY + neededHeight > pageHeight - 25) {
       doc.addPage();
-      return doc.getY();
+      return 25;
     }
     return currentY;
   };
 
-  // ── Cabecera: emisor (izquierda) y cliente (derecha) ──
-  let cursorY = 20;
+  const emitterName = profile.businessName || profile.name || 'Mi Empresa';
+  let cursorY = 25;
 
-  // Emisor
+  // ══════════════════════════════════════════════
+  // 1. CABECERA: Emisor (izq) + "PRESUPUESTO" (der)
+  // ══════════════════════════════════════════════
+
+  // -- Emisor (izquierda) --
   doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
-  doc.text(profile.businessName || profile.name || 'Presupuesto', margin, cursorY);
+  doc.setTextColor(15, 23, 42); // slate-900
+  doc.text(emitterName, margin, cursorY);
 
-  cursorY += 7;
-  doc.setFontSize(9);
+  cursorY += 4;
+  doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(100);
+  doc.setTextColor(100, 116, 139); // slate-500
   if (profile.cuit) {
     doc.text(`CUIT: ${profile.cuit}`, margin, cursorY);
-    cursorY += 4.5;
+    cursorY += 3.5;
   }
   if (profile.address) {
     doc.text(profile.address, margin, cursorY);
-    cursorY += 4.5;
+    cursorY += 3.5;
   }
 
-  // Cliente (derecha)
-  const rightColX = pageWidth / 2 + 6;
-  let clientY = 20;
-
-  if (budget.clientName) {
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(30);
-    doc.text('Cliente', rightColX, clientY);
-    clientY += 5;
-
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(80);
-    doc.text(budget.clientName, rightColX, clientY);
-    clientY += 4.5;
-
-    if (budget.clientId) {
-      doc.text(`CUIT/DNI: ${budget.clientId}`, rightColX, clientY);
-      clientY += 4.5;
-    }
-    if (budget.clientAddress) {
-      doc.text(budget.clientAddress, rightColX, clientY);
-      clientY += 4.5;
-    }
-  }
-
-  // Línea separadora
-  const separatorY = Math.max(cursorY, clientY) + 4;
-  doc.setDrawColor(200);
-  doc.setLineWidth(0.5);
-  doc.line(margin, separatorY, pageWidth - margin, separatorY);
-
-  // Título y fechas
-  let afterSep = separatorY + 8;
-
-  doc.setFontSize(13);
+  // -- "PRESUPUESTO" (derecha) --
+  const rightX = pageWidth - margin;
+  doc.setFontSize(28);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(30);
-  doc.text(budget.title || 'Presupuesto', margin, afterSep);
+  doc.setTextColor(226, 232, 240); // slate-200 — muy claro
+  doc.text('PRESUPUESTO', rightX, 25, { align: 'right' });
 
-  afterSep += 6;
-  doc.setFontSize(9);
+  // Subtítulo debajo de "PRESUPUESTO"
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(100, 116, 139); // slate-500
+  doc.text(budget.title || 'Detalle de cotización', rightX, 25 + 8, { align: 'right' });
+
+  // ══════════════════════════════════════════════
+  // 2. FECHAS Y DATOS DEL CLIENTE
+  // ══════════════════════════════════════════════
+
+  // Separador delgado
+  const sepY = Math.max(cursorY + 4, 25 + 12);
+  doc.setDrawColor(226, 232, 240); // slate-200
+  doc.setLineWidth(0.5);
+  doc.line(margin, sepY, pageWidth - margin, sepY);
+
+  let sectionY = sepY + 8;
+
+  // -- Fechas (izquierda) --
+  const labelX = margin;
+  const valueX = margin + 30;
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(51, 65, 85); // slate-700
+  doc.text('Fecha de Emisión:', labelX, sectionY);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(100);
-  doc.text(`Emisión: ${formatDateShort(budget.createdAt)}`, margin, afterSep);
+  doc.setTextColor(100, 116, 139); // slate-500
+  doc.text(formatDateShort(budget.createdAt), valueX, sectionY);
+
+  sectionY += 4.5;
 
   if (budget.dueDays) {
     const dueDate = addDays(budget.createdAt, budget.dueDays);
-    doc.text(`Vencimiento: ${dueDate} (${budget.dueDays} días)`, margin + 50, afterSep);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(51, 65, 85);
+    doc.text('Vencimiento:', labelX, sectionY);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 116, 139);
+    doc.text(`${dueDate} (${budget.dueDays} días)`, valueX, sectionY);
+    sectionY += 4.5;
   }
 
-  // Tabla de ítems
+  // -- Cliente (derecha) --
+  const clientX = pageWidth / 2 + 5;
+  let clientY = sepY + 8;
+
+  if (budget.clientName) {
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(51, 65, 85);
+    doc.text('Para:', clientX, clientY);
+    clientY += 4.5;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(15, 23, 42); // slate-900
+    doc.text(budget.clientName, clientX, clientY);
+    clientY += 4.5;
+
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 116, 139); // slate-500
+    if (budget.clientId) {
+      doc.text(`CUIT/DNI: ${budget.clientId}`, clientX, clientY);
+      clientY += 3.5;
+    }
+    if (budget.clientAddress) {
+      doc.text(budget.clientAddress, clientX, clientY);
+      clientY += 3.5;
+    }
+  }
+
+  // ══════════════════════════════════════════════
+  // 3. TABLA DE ÍTEMS
+  // ══════════════════════════════════════════════
+
+  const tableStartY = Math.max(sectionY, clientY) + 6;
+
   const tableBody = budget.items.map((item, i) => [
     item.description || `Ítem ${i + 1}`,
     item.quantity.toString(),
@@ -154,31 +175,34 @@ async function generateInternal(budget, profile) {
   ]);
 
   doc.autoTable({
-    startY: afterSep + 6,
+    startY: tableStartY,
     margin: { horizontal: margin },
     tableWidth: contentWidth,
     head: [['Descripción', 'Cant.', 'Precio Unit.', 'Subtotal']],
     body: tableBody,
     foot: [['', '', 'TOTAL', formatCurrency(budget.total)]],
-    theme: 'grid',
+    theme: 'plain',
     headStyles: {
-      fillColor: [30, 30, 30],
-      textColor: [255, 255, 255],
+      fillColor: [248, 250, 252], // slate-50
+      textColor: [51, 65, 85],    // slate-700
       fontStyle: 'bold',
-      fontSize: 9,
+      fontSize: 8,
+      lineColor: [226, 232, 240],
+      lineWidth: 0.5,
     },
     bodyStyles: {
-      fontSize: 9,
-      textColor: [50, 50, 50],
+      fontSize: 8,
+      textColor: [71, 85, 105],   // slate-600
+      lineColor: [241, 245, 249], // slate-100
+      lineWidth: 0.3,
     },
     footStyles: {
-      fillColor: [240, 240, 240],
-      textColor: [30, 30, 30],
+      fillColor: [248, 250, 252], // slate-50
+      textColor: [15, 23, 42],    // slate-900
       fontStyle: 'bold',
-      fontSize: 10,
-    },
-    alternateRowStyles: {
-      fillColor: [248, 248, 248],
+      fontSize: 9,
+      lineColor: [30, 41, 59],    // slate-800
+      lineWidth: 0.8,
     },
     columnStyles: {
       0: { cellWidth: 'auto' },
@@ -189,23 +213,55 @@ async function generateInternal(budget, profile) {
     pageBreak: 'auto',
   });
 
-  // Firma
-  const signatureY = checkPageBreak(30);
-  const finalY = Math.max(
-    signatureY,
-    (doc.lastAutoTable?.finalY ?? signatureY) + 10,
-  );
+  // ══════════════════════════════════════════════
+  // 4. FIRMA, CONTACTO Y QR
+  // ══════════════════════════════════════════════
 
-  doc.setFontSize(9);
+  const tableEndY = ensureSpace(35);
+  const finalY = Math.max(tableEndY, (doc.lastAutoTable?.finalY ?? tableEndY) + 15);
+
+  // -- Firma (izquierda) --
+  const signatureW = 48; // ~ w-48 (48mm)
+  doc.setDrawColor(148, 163, 184); // slate-400
+  doc.setLineWidth(0.5);
+  doc.line(margin, finalY, margin + signatureW, finalY);
+
+  doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(120);
-  doc.text('_____________________________', margin, finalY + 6);
-  doc.text('Firma del Emisor', margin + 2, finalY + 12);
+  doc.setTextColor(100, 116, 139); // slate-500
+  doc.text('Firma del Emisor', margin + signatureW / 2, finalY + 5, { align: 'center' });
 
-  // Footer en todas las páginas
-  addFooter();
+  // -- QR placeholder (derecha) --
+  const qrSize = 16; // w-16 (16mm)
+  const qrX = pageWidth - margin - qrSize;
 
-  // Nombre del archivo con fecha
+  doc.setDrawColor(203, 213, 225); // slate-300
+  doc.setLineWidth(0.5);
+  doc.rect(qrX, finalY - 5, qrSize, qrSize);
+
+  doc.setFontSize(6);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(203, 213, 225);
+  doc.text('QR', qrX + qrSize / 2, finalY - 5 + qrSize / 2 + 1, { align: 'center' });
+
+  // -- Texto de contacto (a la izquierda del QR) --
+  const gap = 4;
+  const textRight = qrX - gap;
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(51, 65, 85);
+  doc.text(`Generado por ${profile.name || 'Tu Nombre'}`, textRight, finalY, { align: 'right' });
+
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(100, 116, 139);
+  doc.text('Conocé más y creá tu presupuesto en:', textRight, finalY + 5, { align: 'right' });
+
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(59, 130, 246); // blue-500
+  doc.text('www.tu-sitio-web.com.ar', textRight, finalY + 10, { align: 'right' });
+
+  // ── Nombre del archivo ──
   const dateStr = budget.createdAt
     ? budget.createdAt.slice(0, 10)
     : new Date().toISOString().slice(0, 10);

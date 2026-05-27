@@ -35,10 +35,10 @@ export default function BudgetHistory({ budgets = [], profile, onDelete, onSelec
 
   if (budgets.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-zinc-500">
+      <div className="flex flex-col items-center justify-center py-12 text-text-secondary">
         <FileText size={40} className="mb-3 opacity-40" />
         <p className="text-sm">Todavía no hay presupuestos</p>
-        <p className="text-xs text-zinc-600 mt-1">
+        <p className="text-xs text-text-secondary/60 mt-1">
           Creá tu primer presupuesto desde el botón de arriba.
         </p>
       </div>
@@ -51,28 +51,33 @@ export default function BudgetHistory({ budgets = [], profile, onDelete, onSelec
         {budgets.map((budget) => (
           <div
             key={budget.id}
-            className="flex items-center gap-3 rounded-lg border border-zinc-800 bg-zinc-900/40 p-3 hover:border-zinc-700 transition-colors"
+            className="flex items-center gap-3 rounded-lg border border-card-border bg-history-row p-3 hover:border-text-secondary/30 transition-all duration-200"
           >
+            {/* Ícono de acento (historial) */}
+            <div className="shrink-0 w-9 h-9 rounded-full bg-accent-bg flex items-center justify-center">
+              <FileText size={16} className="text-accent-icon" />
+            </div>
+
             {/* Info */}
             <div
               className="flex-1 min-w-0 cursor-pointer"
               onClick={() => onSelect?.(budget.id)}
             >
-              <p className="text-sm font-medium text-zinc-200 truncate">
+              <p className="text-sm font-medium text-text-primary truncate">
                 {budget.title || 'Sin título'}
               </p>
-              <p className="text-xs text-zinc-500 mt-0.5 truncate">
-                <span className="text-zinc-600">#{budget.code}</span>
+              <p className="text-xs text-text-secondary mt-0.5 truncate">
+                <span className="text-text-secondary/60">#{budget.code}</span>
                 {' · '}
                 {budget.clientName ? (
-                  <><span className="text-zinc-600">Cliente:</span> {budget.clientName} · </>
+                  <><span className="text-text-secondary/60">Cliente:</span> {budget.clientName} · </>
                 ) : null}
                 {formatDateShort(budget.createdAt)}
               </p>
             </div>
 
             {/* Monto */}
-            <span className="text-sm font-mono text-emerald-400 font-medium whitespace-nowrap">
+            <span className="text-sm font-mono font-bold text-text-primary whitespace-nowrap">
               {formatCurrency(budget.total)}
             </span>
 
@@ -81,7 +86,7 @@ export default function BudgetHistory({ budgets = [], profile, onDelete, onSelec
               <button
                 onClick={() => handleDownload(budget)}
                 disabled={downloadingId === budget.id}
-                className="p-1.5 text-zinc-500 hover:text-emerald-400 disabled:text-zinc-700 disabled:pointer-events-none transition-colors cursor-pointer"
+                className="p-1.5 text-text-secondary hover:text-primary disabled:text-text-secondary/30 disabled:pointer-events-none transition-colors cursor-pointer"
                 aria-label="Descargar PDF"
                 title={downloadingId === budget.id ? 'Generando…' : 'Descargar PDF'}
               >
@@ -89,7 +94,7 @@ export default function BudgetHistory({ budgets = [], profile, onDelete, onSelec
               </button>
               <button
                 onClick={() => setDeleteTarget(budget.id)}
-                className="p-1.5 text-zinc-500 hover:text-red-400 transition-colors cursor-pointer"
+                className="p-1.5 text-text-secondary hover:text-primary transition-colors cursor-pointer"
                 aria-label="Eliminar presupuesto"
                 title="Eliminar"
               >
@@ -106,7 +111,7 @@ export default function BudgetHistory({ budgets = [], profile, onDelete, onSelec
         onClose={() => setDeleteTarget(null)}
         title="Confirmar eliminación"
       >
-        <p className="text-sm text-zinc-300 mb-6">
+        <p className="text-sm text-text-primary mb-6">
           ¿Estás seguro de que querés eliminar este presupuesto? Esta acción no se puede deshacer.
         </p>
         <div className="flex gap-2 justify-end">

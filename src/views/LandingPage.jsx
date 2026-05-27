@@ -11,10 +11,10 @@ import Button from '../components/ui/Button';
  */
 export default function LandingPage({ onStart }) {
   return (
-    <div className="min-h-dvh flex flex-col">
+    <div className="min-h-dvh flex flex-col bg-background transition-colors duration-300">
       {/* Navbar simple */}
-      <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-zinc-800">
-        <span className="text-sm font-bold text-emerald-400 tracking-tight">
+      <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-card-border transition-colors duration-300">
+        <span className="text-sm font-bold text-primary tracking-tight">
           Presupuesto Online
         </span>
         <Button variant="ghost" size="sm" onClick={onStart}>
@@ -25,16 +25,16 @@ export default function LandingPage({ onStart }) {
       <main className="flex-1 flex flex-col items-center px-4 sm:px-6 pt-12 sm:pt-20 pb-16 max-w-2xl mx-auto w-full">
         {/* ── Hero ── */}
         <section className="text-center mb-16 animate-fade-in-up">
-          <span className="inline-block text-[10px] tracking-[0.2em] uppercase text-emerald-400 border border-emerald-400/30 px-3 py-1 rounded-full mb-6">
+          <span className="inline-block text-[10px] tracking-[0.2em] uppercase text-primary border border-primary/30 px-3 py-1 rounded-full mb-6">
             Mobile First · 100% offline
           </span>
-          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-zinc-100 leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-text-primary leading-tight">
             Presupuestos{' '}
-            <span className="text-emerald-400">profesionales</span>
+            <span className="text-primary">profesionales</span>
             <br />
             al instante
           </h1>
-          <p className="mt-4 text-sm sm:text-base text-zinc-400 max-w-md mx-auto leading-relaxed">
+          <p className="mt-4 text-sm sm:text-base text-text-secondary max-w-md mx-auto leading-relaxed">
             Creá, gestioná y exportá presupuestos desde cualquier dispositivo,
             sin registro, sin internet, sin limites.
           </p>
@@ -65,15 +65,15 @@ export default function LandingPage({ onStart }) {
           ].map((feat) => (
             <div
               key={feat.title}
-              className="flex flex-col items-center text-center rounded-xl border border-zinc-800 bg-zinc-900/40 p-5"
+              className="flex flex-col items-center text-center rounded-xl border border-card-border bg-card p-5 transition-colors duration-200"
             >
-              <div className="rounded-full bg-emerald-500/10 p-2.5 mb-3">
-                <feat.icon size={20} className="text-emerald-400" />
+              <div className="rounded-full bg-accent-bg p-2.5 mb-3">
+                <feat.icon size={20} className="text-accent-icon" />
               </div>
-              <h3 className="text-sm font-semibold text-zinc-200 mb-1">
+              <h3 className="text-sm font-semibold text-text-primary mb-1">
                 {feat.title}
               </h3>
-              <p className="text-xs text-zinc-500 leading-relaxed">
+              <p className="text-xs text-text-secondary leading-relaxed">
                 {feat.desc}
               </p>
             </div>
@@ -81,14 +81,14 @@ export default function LandingPage({ onStart }) {
         </section>
 
         {/* ── Transparencia ── */}
-        <section className="w-full rounded-xl border border-zinc-800 bg-zinc-900/30 p-5 sm:p-7">
-          <h2 className="text-sm font-semibold text-zinc-200 uppercase tracking-wide mb-3 flex items-center gap-2">
-            <Shield size={16} className="text-emerald-400" />
+        <section className="w-full rounded-xl border border-card-border bg-card p-5 sm:p-7 transition-colors duration-200">
+          <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wide mb-3 flex items-center gap-2">
+            <Shield size={16} className="text-primary" />
             Tus datos están seguros
           </h2>
-          <div className="space-y-3 text-xs sm:text-sm text-zinc-400 leading-relaxed">
+          <div className="space-y-3 text-xs sm:text-sm text-text-secondary leading-relaxed">
             <p>
-              <strong className="text-zinc-300">Esta app guarda todo en tu navegador</strong>{' '}
+              <strong className="text-text-primary">Esta app guarda todo en tu navegador</strong>{' '}
               usando IndexedDB, una base de datos local. No hay servidores, no hay
               cuentas, no hay cookies de seguimiento.
             </p>
@@ -96,7 +96,7 @@ export default function LandingPage({ onStart }) {
               Cuando cerrás el navegador o perdés conexión, tus presupuestos siguen ahí.
               Incluso podés exportar un archivo de respaldo y llevarlo a otro dispositivo.
             </p>
-            <p className="text-zinc-500 text-[11px] italic">
+            <p className="text-text-secondary/60 text-[11px] italic">
               Tecnología: IndexedDB (vía Dexie) + almacenamiento persistente del navegador.
               Sin llamadas a APIs externas.
             </p>
@@ -110,9 +110,9 @@ export default function LandingPage({ onStart }) {
         </Button>
       </main>
 
-      <footer className="text-center text-[10px] text-zinc-700 py-6 border-t border-zinc-800/50">
+      <footer className="text-center text-[10px] text-text-secondary/50 py-6 border-t border-card-border/50 transition-colors duration-200">
         Presupuesto Online — Hecho con ❤️ por{' '}
-        <span className="text-zinc-500">un desarrollador</span>
+        <span className="text-text-secondary">un desarrollador</span>
       </footer>
     </div>
   );

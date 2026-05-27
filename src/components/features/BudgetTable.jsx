@@ -37,7 +37,7 @@ export default function BudgetTable({ items = [], onChange }) {
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-zinc-700 text-left text-xs text-zinc-400 uppercase tracking-wide">
+            <tr className="border-b border-card-border text-left text-xs text-text-secondary uppercase tracking-wide">
               <th className="pb-2 pr-2 w-1/2">Descripción</th>
               <th className="pb-2 pr-2 w-16 text-center">Cant.</th>
               <th className="pb-2 pr-2 w-24 text-right">P. Unit.</th>
@@ -47,14 +47,14 @@ export default function BudgetTable({ items = [], onChange }) {
           </thead>
           <tbody>
             {items.map((item, i) => (
-              <tr key={i} className="border-b border-zinc-800/50">
+              <tr key={i} className="border-b border-card-border/50">
                 <td className="py-1.5 pr-2">
                   <input
                     type="text"
                     placeholder="Ej: Mano de obra"
                     value={item.description}
                     onChange={updateRow(i, 'description')}
-                    className="w-full bg-transparent outline-none text-zinc-100 placeholder:text-zinc-600 py-1"
+                    className="w-full bg-transparent outline-none text-text-primary placeholder:text-text-secondary/50 py-1"
                   />
                 </td>
                 <td className="py-1.5 pr-2">
@@ -65,7 +65,7 @@ export default function BudgetTable({ items = [], onChange }) {
                     value={item.quantity}
                     onChange={updateRow(i, 'quantity')}
                     onFocus={(e) => e.target.select()}
-                    className="w-14 bg-zinc-800 rounded px-2 py-1 text-center text-zinc-100 outline-none focus:ring-1 focus:ring-emerald-500/30"
+                    className="w-14 bg-input-bg rounded px-2 py-1 text-center text-text-primary outline-none transition-all duration-150 focus:ring-1 focus:ring-primary/30"
                   />
                 </td>
                 <td className="py-1.5 pr-2">
@@ -76,10 +76,10 @@ export default function BudgetTable({ items = [], onChange }) {
                     value={item.unitPrice}
                     onChange={updateRow(i, 'unitPrice')}
                     onFocus={(e) => e.target.select()}
-                    className="w-full bg-zinc-800 rounded px-2 py-1 text-right text-zinc-100 outline-none focus:ring-1 focus:ring-emerald-500/30"
+                    className="w-full bg-input-bg rounded px-2 py-1 text-right text-text-primary outline-none transition-all duration-150 focus:ring-1 focus:ring-primary/30"
                   />
                 </td>
-                <td className="py-1.5 pr-2 text-right text-zinc-300 font-mono text-xs">
+                <td className="py-1.5 pr-2 text-right text-text-secondary font-mono text-xs">
                   {formatCurrency(item.quantity * item.unitPrice)}
                 </td>
                 <td className="py-1.5 text-center">
@@ -87,7 +87,7 @@ export default function BudgetTable({ items = [], onChange }) {
                     <button
                       type="button"
                       onClick={() => removeRow(i)}
-                      className="text-zinc-500 hover:text-red-400 transition-colors cursor-pointer"
+                      className="text-text-secondary hover:text-primary transition-colors cursor-pointer"
                       aria-label="Eliminar ítem"
                     >
                       <Trash2 size={14} />
@@ -103,20 +103,20 @@ export default function BudgetTable({ items = [], onChange }) {
       {/* Vista mobile: cards */}
       <div className="sm:hidden flex flex-col gap-3">
         {items.map((item, i) => (
-          <div key={i} className="rounded-lg border border-zinc-800 bg-zinc-900/80 p-3 relative">
+          <div key={i} className="rounded-lg border border-card-border bg-card p-3 relative">
             <div className="flex items-start justify-between mb-2">
               <input
                 type="text"
                 placeholder="Descripción"
                 value={item.description}
                 onChange={updateRow(i, 'description')}
-                className="flex-1 bg-transparent outline-none text-sm text-zinc-100 placeholder:text-zinc-600"
+                className="flex-1 bg-transparent outline-none text-sm text-text-primary placeholder:text-text-secondary/50"
               />
               {items.length > 1 && (
                 <button
                   type="button"
                   onClick={() => removeRow(i)}
-                  className="text-zinc-500 hover:text-red-400 transition-colors ml-2 cursor-pointer"
+                  className="text-text-secondary hover:text-primary transition-colors ml-2 cursor-pointer"
                   aria-label="Eliminar ítem"
                 >
                   <Trash2 size={14} />
@@ -125,7 +125,7 @@ export default function BudgetTable({ items = [], onChange }) {
             </div>
             <div className="flex gap-2">
               <div className="flex-1">
-                <label className="text-[10px] text-zinc-500 uppercase">Cant.</label>
+                <label className="text-[10px] text-text-secondary uppercase">Cant.</label>
                 <input
                   type="number"
                   min="0"
@@ -133,11 +133,11 @@ export default function BudgetTable({ items = [], onChange }) {
                   value={item.quantity}
                   onChange={updateRow(i, 'quantity')}
                   onFocus={(e) => e.target.select()}
-                  className="w-full bg-zinc-800 rounded px-2 py-1.5 text-sm text-zinc-100 outline-none text-center"
+                  className="w-full bg-input-bg rounded px-2 py-1.5 text-sm text-text-primary outline-none text-center"
                 />
               </div>
               <div className="flex-1">
-                <label className="text-[10px] text-zinc-500 uppercase">P. Unit.</label>
+                <label className="text-[10px] text-text-secondary uppercase">P. Unit.</label>
                 <input
                   type="number"
                   min="0"
@@ -145,12 +145,12 @@ export default function BudgetTable({ items = [], onChange }) {
                   value={item.unitPrice}
                   onChange={updateRow(i, 'unitPrice')}
                   onFocus={(e) => e.target.select()}
-                  className="w-full bg-zinc-800 rounded px-2 py-1.5 text-sm text-zinc-100 outline-none text-right"
+                  className="w-full bg-input-bg rounded px-2 py-1.5 text-sm text-text-primary outline-none text-right"
                 />
               </div>
               <div className="flex-1">
-                <label className="text-[10px] text-zinc-500 uppercase">Subtotal</label>
-                <div className="w-full bg-zinc-800 rounded px-2 py-1.5 text-sm text-emerald-400 font-mono text-right">
+                <label className="text-[10px] text-text-secondary uppercase">Subtotal</label>
+                <div className="w-full bg-input-bg rounded px-2 py-1.5 text-sm font-mono text-text-primary text-right">
                   {formatCurrency(item.quantity * item.unitPrice)}
                 </div>
               </div>
@@ -163,16 +163,16 @@ export default function BudgetTable({ items = [], onChange }) {
       <button
         type="button"
         onClick={addRow}
-        className="flex items-center justify-center gap-1.5 text-xs text-zinc-400 hover:text-emerald-400 transition-colors py-2 cursor-pointer"
+        className="flex items-center justify-center gap-1.5 text-xs text-text-secondary hover:text-primary transition-colors py-2 cursor-pointer"
       >
         <Plus size={14} />
         Agregar ítem
       </button>
 
       {/* Total */}
-      <div className="flex justify-end items-center gap-4 border-t border-zinc-700 pt-3 mt-1">
-        <span className="text-sm font-semibold text-zinc-300 uppercase">Total</span>
-        <span className="text-lg font-bold font-mono text-emerald-400">
+      <div className="flex justify-end items-center gap-4 border-t border-card-border pt-3 mt-1">
+        <span className="text-sm font-semibold text-text-secondary uppercase">Total</span>
+        <span className="text-lg font-bold font-mono text-text-primary">
           {formatCurrency(total)}
         </span>
       </div>

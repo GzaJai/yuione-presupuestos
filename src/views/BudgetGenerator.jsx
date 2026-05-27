@@ -7,6 +7,7 @@ import Card from '../components/ui/Card';
 import BudgetTable from '../components/features/BudgetTable';
 import ClientSelect from '../components/features/ClientSelect';
 import ClientFormModal from '../components/features/ClientFormModal';
+import ThemeToggle from '../components/ui/ThemeToggle';
 import { useClients } from '../hooks/useClients';
 import { calcTotal } from '../utils/formatters';
 import { generatePDFFromTemplate } from '../utils/htmlPdfGenerator';
@@ -127,21 +128,21 @@ export default function BudgetGenerator({ profile, onBack, onSave }) {
   };
 
   return (
-    <div className="min-h-dvh flex flex-col">
+    <div className="min-h-dvh flex flex-col bg-background transition-colors duration-300">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-card-border bg-background/90 backdrop-blur-md transition-colors duration-300">
         <div className="max-w-2xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           <button
             onClick={onBack}
-            className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
           >
             <ArrowLeft size={16} />
             Volver
           </button>
-          <span className="text-sm font-medium text-zinc-300">
+          <span className="text-sm font-medium text-text-primary">
             Nuevo Presupuesto
           </span>
-          <div className="w-16" />
+          <ThemeToggle />
         </div>
       </header>
 

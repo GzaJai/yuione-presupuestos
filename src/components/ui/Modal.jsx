@@ -33,23 +33,23 @@ export default function Modal({ open, onClose, title, children }) {
       onClick={onClose}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm transition-colors duration-300" />
 
       {/* Content */}
       <div
-        className="relative z-10 w-full max-w-md rounded-xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl animate-fade-in-up"
+        className="relative z-10 w-full max-w-md rounded-xl border border-card-border bg-card p-6 shadow-2xl animate-fade-in-up transition-colors duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           {title && (
-            <h3 className="text-sm font-semibold text-zinc-200 uppercase tracking-wide">
+            <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wide">
               {title}
             </h3>
           )}
           <button
             onClick={onClose}
-            className="text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
+            className="text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
             aria-label="Cerrar"
           >
             <X size={18} />

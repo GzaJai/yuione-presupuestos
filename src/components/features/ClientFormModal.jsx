@@ -56,7 +56,6 @@ export default function ClientFormModal({ open, onClose, onSave }) {
         address: form.address.trim(),
         dueDays: form.dueDays || null,
       });
-      // Reset y cierre
       setForm({ name: '', cuitDni: '', address: '', dueDays: '' });
       onClose();
     } catch (err) {

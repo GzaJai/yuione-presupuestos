@@ -1,16 +1,79 @@
 ﻿@import "tailwindcss";
 
-/* ─── Dark mode base ─── */
+/* ─── Dark mode con class en <html> ─── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Fuente de marca ─── */
+@font-face {
+  font-family: 'Museo Moderno';
+  src: url('/fonts/MuseoModerno-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* ─── Paleta de colores semántica ─── */
+@theme {
+  --font-brand: 'Museo Moderno', cursive;
+  --color-background: var(--bg);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-history-row: var(--history-row);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-accent-bg: var(--accent-bg);
+  --color-accent-icon: var(--accent-icon);
+  --color-input-bg: var(--input-bg);
+  --color-input-border: var(--input-border);
+  --color-overlay: var(--overlay);
+}
+
 :root {
+  /* Modo CLARO */
+  --bg: #F9F8F4;
+  --card: #FFFFFF;
+  --card-border: #E5E5E5;
+  --primary: #B30000;
+  --primary-hover: #8B0000;
+  --history-row: #F2F0E9;
+  --text-primary: #171717;
+  --text-secondary: #525252;
+  --accent-bg: #FADCD4;
+  --accent-icon: #B30000;
+  --input-bg: #FFFFFF;
+  --input-border: #E5E5E5;
+  --overlay: rgba(0, 0, 0, 0.5);
+
+  color-scheme: light;
+}
+
+:root.dark {
+  /* Modo OSCURO */
+  --bg: #161616;
+  --card: #212121;
+  --card-border: #333333;
+  --primary: #FF0505;
+  --primary-hover: #E00000;
+  --history-row: #3A3A3A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A3A3A3;
+  --accent-bg: #FADCD4;
+  --accent-icon: #FF0505;
+  --input-bg: #212121;
+  --input-border: #333333;
+  --overlay: rgba(0, 0, 0, 0.6);
+
   color-scheme: dark;
 }
 
+/* ─── Base ─── */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  @apply bg-zinc-950 text-zinc-100 antialiased;
+  @apply bg-background text-text-primary antialiased transition-colors duration-300;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
 }
@@ -25,11 +88,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-zinc-700 rounded-full;
+  @apply bg-[#333333] dark:bg-[#555555] rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-zinc-600;
+  @apply bg-[#555555] dark:bg-[#777777];
 }
 
 /* ─── Ocultar flechas de input number (spinners), teclado sigue funcionando ─── */

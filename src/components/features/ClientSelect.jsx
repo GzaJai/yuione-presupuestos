@@ -74,7 +74,6 @@ export default function ClientSelect({
     }
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      // focus first item (just keep open)
     }
   };
 
@@ -88,15 +87,12 @@ export default function ClientSelect({
           onClick={toggle}
           className={`
             w-full flex items-center gap-2 rounded-lg border px-3 py-2 text-sm
-            transition-all duration-150 cursor-pointer
-            ${error ? 'border-red-500 ring-1 ring-red-500/30' : 'border-zinc-700'}
-            ${selectedClient
-              ? 'bg-zinc-900 text-zinc-100'
-              : 'bg-zinc-900 text-zinc-500'
-            }
+            transition-all duration-150 cursor-pointer bg-input-bg
+            ${error ? 'border-primary ring-1 ring-primary/30' : 'border-input-border'}
+            ${selectedClient ? 'text-text-primary' : 'text-text-secondary'}
           `}
         >
-          <UserRound size={14} className="text-zinc-500 shrink-0" />
+          <UserRound size={14} className="text-text-secondary shrink-0" />
           <span className="flex-1 text-left truncate">
             {selectedClient
               ? selectedClient.name
@@ -104,20 +100,20 @@ export default function ClientSelect({
           </span>
           <ChevronDown
             size={14}
-            className={`text-zinc-500 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
+            className={`text-text-secondary transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
           />
         </button>
 
         {error && (
-          <p className="text-xs text-red-400 mt-1">{error}</p>
+          <p className="text-xs text-primary mt-1">{error}</p>
         )}
 
         {/* Dropdown */}
         {open && (
-          <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-lg border border-zinc-700 bg-zinc-900 shadow-xl overflow-hidden animate-fade-in">
+          <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-lg border border-card-border bg-card shadow-xl overflow-hidden animate-fade-in transition-colors duration-200">
             {/* Buscador */}
-            <div className="flex items-center gap-2 border-b border-zinc-800 px-3 py-2">
-              <Search size={14} className="text-zinc-500 shrink-0" />
+            <div className="flex items-center gap-2 border-b border-card-border px-3 py-2">
+              <Search size={14} className="text-text-secondary shrink-0" />
               <input
                 ref={inputRef}
                 type="text"
@@ -126,14 +122,14 @@ export default function ClientSelect({
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 autoFocus
-                className="flex-1 bg-transparent text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
+                className="flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-secondary"
               />
             </div>
 
             {/* Lista de clientes */}
             <div className="max-h-48 overflow-y-auto">
               {filtered.length === 0 ? (
-                <div className="px-3 py-6 text-center text-xs text-zinc-500">
+                <div className="px-3 py-6 text-center text-xs text-text-secondary">
                   {query.trim()
                     ? 'No se encontraron clientes'
                     : 'Todavía no hay clientes guardados'}
@@ -146,13 +142,13 @@ export default function ClientSelect({
                     onClick={() => handleSelect(client)}
                     className={`
                       w-full text-left px-3 py-2.5 text-sm transition-colors cursor-pointer
-                      hover:bg-zinc-800 border-b border-zinc-800/50 last:border-b-0
-                      ${selectedClient?.id === client.id ? 'bg-zinc-800/50 text-emerald-400' : 'text-zinc-200'}
+                      border-b border-card-border/50 last:border-b-0
+                      ${selectedClient?.id === client.id ? 'bg-history-row text-primary' : 'text-text-primary hover:bg-history-row'}
                     `}
                   >
                     <span className="font-medium">{client.name}</span>
                     {client.cuitDni && (
-                      <span className="text-zinc-500 ml-2 text-xs">
+                      <span className="text-text-secondary ml-2 text-xs">
                         {client.cuitDni}
                       </span>
                     )}
@@ -169,7 +165,7 @@ export default function ClientSelect({
                 setQuery('');
                 onNewClient();
               }}
-              className="w-full flex items-center gap-2 border-t border-zinc-800 px-3 py-2.5 text-sm text-emerald-400 hover:bg-zinc-800 transition-colors cursor-pointer"
+              className="w-full flex items-center gap-2 border-t border-card-border px-3 py-2.5 text-sm text-primary hover:bg-history-row transition-colors cursor-pointer"
             >
               <Plus size={14} />
               Crear nuevo cliente
@@ -182,7 +178,7 @@ export default function ClientSelect({
       <button
         type="button"
         onClick={onNewClient}
-        className="flex items-center justify-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-400 hover:text-emerald-400 hover:border-emerald-500/50 transition-all cursor-pointer whitespace-nowrap"
+        className="flex items-center justify-center gap-1.5 rounded-lg border border-input-border bg-input-bg px-3 py-2 text-sm text-text-secondary hover:text-primary hover:border-primary/50 transition-all cursor-pointer whitespace-nowrap"
         title="Nuevo cliente"
       >
         <Plus size={16} />

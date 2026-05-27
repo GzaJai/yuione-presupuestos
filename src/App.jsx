@@ -43,7 +43,6 @@ export default function App() {
       if (profile) {
         setView(VIEWS.DASHBOARD);
       }
-      // Si no hay perfil, se queda en LANDING (primer visita)
     }
   }, [profileLoading, budgetsLoading, profile]);
 
@@ -98,10 +97,10 @@ export default function App() {
   // ── Loading ──
   if (profileLoading || budgetsLoading) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-zinc-950">
+      <div className="min-h-dvh flex items-center justify-center bg-background transition-colors duration-300">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-zinc-500">Cargando…</p>
+          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-text-secondary">Cargando…</p>
         </div>
       </div>
     );
@@ -119,7 +118,7 @@ export default function App() {
       return (
         <>
           {importError && (
-            <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-red-600/90 text-white text-xs px-4 py-2 rounded-lg shadow-lg animate-fade-in">
+            <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-primary text-white text-xs px-4 py-2 rounded-lg shadow-lg animate-fade-in transition-colors duration-200">
               {importError}
               <button
                 onClick={() => setImportError('')}
@@ -137,7 +136,7 @@ export default function App() {
             onExport={handleExport}
             onImport={handleImport}
             onEditProfile={() => setProfileModalOpen(true)}
-                onReset={() => {
+            onReset={() => {
               if (window.confirm('¿Reiniciar todos los datos? Esta acción no se puede deshacer.')) {
                 Promise.all([
                   db.userProfile.clear(),
@@ -152,15 +151,14 @@ export default function App() {
               className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
               onClick={() => setProfileModalOpen(false)}
             >
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+              <div className="absolute inset-0 bg-overlay backdrop-blur-sm transition-colors duration-300" />
               <div
-                className="relative z-10 w-full max-w-sm rounded-xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl animate-fade-in-up"
+                className="relative z-10 w-full max-w-sm rounded-xl border border-card-border bg-card p-6 shadow-2xl animate-fade-in-up transition-colors duration-200"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h3 className="text-sm font-semibold text-zinc-200 uppercase tracking-wide mb-4">
+                <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wide mb-4">
                   Editar Perfil
                 </h3>
-                {/* Profile form en modo edición */}
                 {profile && (
                   <ProfileForm
                     initial={profile}

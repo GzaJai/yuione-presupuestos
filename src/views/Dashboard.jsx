@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Plus, Download, Upload, UserRound, LogOut } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
+import ThemeToggle from '../components/ui/ThemeToggle';
 import BudgetHistory from '../components/features/BudgetHistory';
 
 /**
@@ -43,22 +44,23 @@ export default function Dashboard({
   };
 
   return (
-    <div className="min-h-dvh flex flex-col">
+    <div className="min-h-dvh flex flex-col bg-background transition-colors duration-300">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-card-border bg-background/90 backdrop-blur-md transition-colors duration-300">
         <div className="max-w-2xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           <div>
-            <h1 className="text-sm font-bold text-zinc-100">
+            <h1 className="text-sm font-bold text-text-primary">
               {profile?.businessName || profile?.name || 'Usuario'}
             </h1>
-            <p className="text-[10px] text-zinc-500">
+            <p className="text-[10px] text-text-secondary">
               {budgets.length} presupuesto{budgets.length !== 1 ? 's' : ''}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            <ThemeToggle />
             <button
               onClick={onEditProfile}
-              className="p-2 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
+              className="p-2 text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
               aria-label="Editar perfil"
               title="Editar perfil"
             >
@@ -66,7 +68,7 @@ export default function Dashboard({
             </button>
             <button
               onClick={onReset}
-              className="p-2 text-zinc-500 hover:text-red-400 transition-colors cursor-pointer"
+              className="p-2 text-text-secondary hover:text-primary transition-colors cursor-pointer"
               aria-label="Reiniciar"
               title="Reiniciar datos"
             >

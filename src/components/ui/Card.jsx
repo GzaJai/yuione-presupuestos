@@ -7,12 +7,13 @@ export default function Card({ title, className = '', children }) {
   return (
     <section
       className={`
-        rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 sm:p-6
+        rounded-xl border border-card-border bg-card p-4 sm:p-6
+        transition-colors duration-200
         ${className}
       `}
     >
       {title && (
-        <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-wide mb-4">
           {title}
         </h2>
       )}

@@ -21,26 +21,26 @@ const Input = forwardRef(function Input(
       {label && (
         <label
           htmlFor={inputId}
-          className="text-xs font-medium text-zinc-400 tracking-wide uppercase"
+          className="text-xs font-medium text-text-secondary tracking-wide uppercase"
         >
           {label}
-          {rest.required && <span className="text-red-400 ml-0.5">*</span>}
+          {rest.required && <span className="text-primary ml-0.5">*</span>}
         </label>
       )}
       <input
         ref={ref}
         id={inputId}
         className={`
-          w-full rounded-lg border bg-zinc-900 px-3 py-2 text-sm text-zinc-100
-          placeholder:text-zinc-500 outline-none transition-all duration-150
-          focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30
-          ${error ? 'border-red-500 ring-1 ring-red-500/30' : 'border-zinc-700'}
+          w-full rounded-lg border bg-input-bg px-3 py-2 text-sm text-text-primary
+          placeholder:text-text-secondary/50 outline-none transition-all duration-150
+          ${error ? 'border-primary ring-1 ring-primary/30' : 'border-input-border'}
+          focus:border-primary focus:ring-1 focus:ring-primary/30
           ${className}
         `}
         {...rest}
       />
       {error && (
-        <span className="text-xs text-red-400 mt-0.5">{error}</span>
+        <span className="text-xs text-primary mt-0.5">{error}</span>
       )}
     </div>
   );

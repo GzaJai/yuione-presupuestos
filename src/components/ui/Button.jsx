@@ -2,13 +2,13 @@ import { forwardRef } from 'react';
 
 const variantStyles = {
   primary:
-    'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20',
+    'bg-primary hover:bg-primary-hover text-white shadow-md shadow-primary/20',
   secondary:
-    'bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700',
+    'bg-card hover:bg-history-row text-text-primary border border-card-border',
   danger:
-    'bg-red-600 hover:bg-red-500 text-white shadow-md shadow-red-600/20',
+    'bg-primary hover:bg-primary-hover text-white shadow-md shadow-primary/20',
   ghost:
-    'bg-transparent hover:bg-zinc-800 text-zinc-300',
+    'bg-transparent hover:bg-card text-text-secondary hover:text-text-primary',
 };
 
 const sizeStyles = {
