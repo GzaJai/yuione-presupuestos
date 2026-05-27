@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { UserRound } from 'lucide-react';
+import { UserRound, ArrowLeft } from 'lucide-react';
 import ProfileForm from '../components/features/ProfileForm';
 
 /**
  * Pantalla de configuración inicial del perfil.
  * Se muestra solo si el userProfile no existe en DB.
  *
- * @param {{ onComplete: () => void, saveProfile: (data: object) => Promise<void> }} props
+ * @param {{ onBack: () => void, onComplete: () => void, saveProfile: (data: object) => Promise<void> }} props
  */
-export default function Onboarding({ onComplete, saveProfile }) {
+export default function Onboarding({ onBack, onComplete, saveProfile }) {
   const [saving, setSaving] = useState(false);
 
   const handleSave = async (data) => {
@@ -25,6 +25,15 @@ export default function Onboarding({ onComplete, saveProfile }) {
 
   return (
     <div className="min-h-dvh flex flex-col items-center justify-center px-4 py-12 bg-background transition-colors duration-300">
+      {/* Volver al landing */}
+      <button
+        onClick={onBack}
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+      >
+        <ArrowLeft size={16} />
+        Volver
+      </button>
+
       <div className="w-full max-w-sm animate-fade-in-up">
         {/* Marca */}
         <p className="font-brand text-sm font-bold text-primary tracking-wide text-center mb-6">

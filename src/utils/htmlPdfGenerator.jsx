@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import { applyPlugin } from 'jspdf-autotable';
+import QRCode from 'qrcode';
 import { formatCurrency, formatDateShort } from './formatters';
 
 // ── Registro manual del plugin ──
@@ -231,18 +232,17 @@ async function generateInternal(budget, profile) {
   doc.setTextColor(100, 116, 139); // slate-500
   doc.text('Firma del Emisor', margin + signatureW / 2, finalY + 5, { align: 'center' });
 
-  // -- QR placeholder (derecha) --
-  const qrSize = 16; // w-16 (16mm)
+  // -- QR real (derecha) --
+  const qrSize = 16; // 16mm
   const qrX = pageWidth - margin - qrSize;
+  const qrY = finalY - 5;
 
-  doc.setDrawColor(203, 213, 225); // slate-300
-  doc.setLineWidth(0.5);
-  doc.rect(qrX, finalY - 5, qrSize, qrSize);
-
-  doc.setFontSize(6);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(203, 213, 225);
-  doc.text('QR', qrX + qrSize / 2, finalY - 5 + qrSize / 2 + 1, { align: 'center' });
+  const qrDataUrl = await QRCode.toDataURL('https://presupuetos.yuione.com.ar/', {
+    width: 300,
+    margin: 1,
+    color: { dark: '#171717', light: '#FFFFFF' },
+  });
+  doc.addImage(qrDataUrl, 'PNG', qrX, qrY, qrSize, qrSize);
 
   // -- Texto de contacto (a la izquierda del QR) --
   const gap = 4;
@@ -259,7 +259,15 @@ async function generateInternal(budget, profile) {
 
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(59, 130, 246); // blue-500
-  doc.text('www.tu-sitio-web.com.ar', textRight, finalY + 10, { align: 'right' });
+  doc.text('yuione.com.ar', textRight, finalY + 10, { align: 'right' });
+
+  // Link clickeable sobre el texto
+  const linkText = 'yuione.com.ar';
+  const linkW = doc.getTextWidth(linkText);
+  const linkH = 3; // ~ alto del texto en mm
+  const linkX = textRight - linkW;
+  const linkY = finalY + 10 - 2; // ajuste fino
+  doc.link(linkX, linkY, linkW, linkH, { url: 'https://presupuetos.yuione.com.ar/' });
 
   // ── Nombre del archivo ──
   const dateStr = budget.createdAt

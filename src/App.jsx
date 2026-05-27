@@ -63,6 +63,10 @@ export default function App() {
     setView(VIEWS.GENERATOR);
   };
 
+  const handleBackToLanding = () => {
+    setView(VIEWS.LANDING);
+  };
+
   const handleBackToDashboard = () => {
     setView(VIEWS.DASHBOARD);
   };
@@ -113,7 +117,7 @@ export default function App() {
       return <LandingPage onStart={handleStart} />;
 
     case VIEWS.ONBOARDING:
-      return <Onboarding onComplete={handleOnboardingComplete} saveProfile={saveProfile} />;
+      return <Onboarding onBack={handleBackToLanding} onComplete={handleOnboardingComplete} saveProfile={saveProfile} />;
 
     case VIEWS.DASHBOARD:
       return (
@@ -157,9 +161,17 @@ export default function App() {
                 className="relative z-10 w-full max-w-sm rounded-xl border border-card-border bg-card p-6 shadow-2xl animate-fade-in-up transition-colors duration-200"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wide mb-4">
-                  Editar Perfil
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wide">
+                    Editar Perfil
+                  </h3>
+                  <button
+                    onClick={() => setProfileModalOpen(false)}
+                    className="text-xs text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                </div>
                 {profile && (
                   <ProfileForm
                     initial={profile}

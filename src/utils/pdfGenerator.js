@@ -249,7 +249,7 @@ export function generateBudgetPDF(budget, profile) {
 
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(59, 130, 246); // Un azul estilo Tailwind (blue-500) para simular un link
-  doc.text('www.tu-sitio-web.com.ar', textEnd, qrY + 17, { align: 'right' });
+  doc.text('www.yuione.com.ar', textEnd, qrY + 17, { align: 'right' });
 
   // ── Footer en todas las páginas ──
   addFooter();
