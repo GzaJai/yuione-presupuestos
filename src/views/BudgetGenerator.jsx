@@ -132,16 +132,18 @@ export default function BudgetGenerator({ profile, onBack, onSave }) {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-card-border bg-background/90 backdrop-blur-md transition-colors duration-300">
         <div className="max-w-2xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-          >
-            <ArrowLeft size={16} />
-            Volver
-          </button>
-          <span className="text-sm font-medium text-text-primary">
-            Nuevo Presupuesto
-          </span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+            >
+              <ArrowLeft size={16} />
+              Volver
+            </button>
+            <span className="font-brand text-sm font-bold text-primary tracking-wide leading-none">
+              YUI ONE
+            </span>
+          </div>
           <ThemeToggle />
         </div>
       </header>

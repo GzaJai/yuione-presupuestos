@@ -98,7 +98,8 @@ export default function App() {
   if (profileLoading || budgetsLoading) {
     return (
       <div className="min-h-dvh flex items-center justify-center bg-background transition-colors duration-300">
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-4">
+          <p className="font-brand text-lg font-bold text-primary tracking-wide">YUI ONE</p>
           <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           <p className="text-xs text-text-secondary">Cargando…</p>
         </div>

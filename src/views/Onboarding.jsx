@@ -26,6 +26,11 @@ export default function Onboarding({ onComplete, saveProfile }) {
   return (
     <div className="min-h-dvh flex flex-col items-center justify-center px-4 py-12 bg-background transition-colors duration-300">
       <div className="w-full max-w-sm animate-fade-in-up">
+        {/* Marca */}
+        <p className="font-brand text-sm font-bold text-primary tracking-wide text-center mb-6">
+          YUI ONE
+        </p>
+
         {/* Icono */}
         <div className="flex justify-center mb-6">
           <div className="rounded-full bg-accent-bg p-4">

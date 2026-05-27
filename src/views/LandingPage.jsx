@@ -1,5 +1,6 @@
-import { ArrowRight, Shield, FileText, Smartphone } from 'lucide-react';
+import { ArrowRight, Shield, FileText, Smartphone,ExternalLink, Layers } from 'lucide-react';
 import Button from '../components/ui/Button';
+import logoYuiOne from '../assets/yuione.png'
 
 /**
  * Pantalla de bienvenida con:
@@ -14,8 +15,8 @@ export default function LandingPage({ onStart }) {
     <div className="min-h-dvh flex flex-col bg-background transition-colors duration-300">
       {/* Navbar simple */}
       <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-card-border transition-colors duration-300">
-        <span className="text-sm font-bold text-primary tracking-tight">
-          Presupuesto Online
+        <span className="font-brand text-base font-bold text-primary tracking-wide">
+          YUI ONE
         </span>
         <Button variant="ghost" size="sm" onClick={onStart}>
           Ingresar
@@ -26,7 +27,7 @@ export default function LandingPage({ onStart }) {
         {/* ── Hero ── */}
         <section className="text-center mb-16 animate-fade-in-up">
           <span className="inline-block text-[10px] tracking-[0.2em] uppercase text-primary border border-primary/30 px-3 py-1 rounded-full mb-6">
-            Mobile First · 100% offline
+            NIVEL PROFESIONAL · PARA LA COMUNIDAD
           </span>
           <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-text-primary leading-tight">
             Presupuestos{' '}
@@ -108,11 +109,39 @@ export default function LandingPage({ onStart }) {
           Comenzar a usar
           <ArrowRight size={16} />
         </Button>
+
+        <section className="mt-20 mb-12 flex flex-col items-center justify-center text-center px-4">
+          <div className="flex flex-col items-center gap-2 mb-3">
+            <img src={logoYuiOne} alt="Logo de yui one" className='w-32' />
+            <h2 className="text-3xl font-bold text-white tracking-[0.2em] uppercase font-brand">
+              YUI ONE
+            </h2>
+          </div>
+
+          <p className="text-[#A3A3A3] max-w-md text-sm md:text-base mb-6 leading-relaxed">
+            ¿Necesitás ir más allá de los presupuestos?
+          </p>
+          <p className="text-[#A3A3A3] max-w-md text-sm md:text-base mb-6 leading-relaxed">
+            Conocé nuestro Sistema Integral de Gestión Empresarial. Todo tu entorno de trabajo, centralizado y simplificado.
+          </p>
+
+          <a
+            href="https://yuione.com.ar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-2 text-[15px] font-semibold text-[#FF0505] hover:text-white duration-300 hover:-translate-y-1"
+          >
+            <span>Visitalo acá</span>
+            <ExternalLink 
+              size={16} 
+            />
+          </a>
+        </section>
       </main>
 
       <footer className="text-center text-[10px] text-text-secondary/50 py-6 border-t border-card-border/50 transition-colors duration-200">
-        Presupuesto Online — Hecho con ❤️ por{' '}
-        <span className="text-text-secondary">un desarrollador</span>
+        YUI ONE — Hecho por{' '}
+        <span className="text-text-secondary">Gonzalo Jaime</span>
       </footer>
     </div>
   );

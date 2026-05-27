@@ -49,9 +49,12 @@ export default function Dashboard({
       <header className="sticky top-0 z-40 border-b border-card-border bg-background/90 backdrop-blur-md transition-colors duration-300">
         <div className="max-w-2xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           <div>
-            <h1 className="text-sm font-bold text-text-primary">
-              {profile?.businessName || profile?.name || 'Usuario'}
+            <h1 className="font-brand text-base font-bold text-primary tracking-wide leading-none">
+              YUI ONE
             </h1>
+            <p className="text-[11px] text-text-primary font-medium mt-0.5">
+              {profile?.businessName || profile?.name || 'Usuario'}
+            </p>
             <p className="text-[10px] text-text-secondary">
               {budgets.length} presupuesto{budgets.length !== 1 ? 's' : ''}
             </p>
