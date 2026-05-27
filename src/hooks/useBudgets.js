@@ -53,6 +53,18 @@ export function useBudgets() {
   }, []);
 
   /**
+   * Actualiza un presupuesto existente.
+   * @param {number} id
+   * @param {{ title?: string, items?: Array, total?: number, clientName?: string, clientId?: string, clientAddress?: string, dueDays?: number|null }} data
+   */
+  const updateBudget = useCallback(async (id, data) => {
+    const now = new Date().toISOString();
+    const updated = { ...data, updatedAt: now };
+    await db.budgets.update(id, updated);
+    setBudgets((prev) => prev.map((b) => (b.id === id ? { ...b, ...updated } : b)));
+  }, []);
+
+  /**
    * Elimina un presupuesto por ID.
    * @param {number} id
    */
@@ -136,5 +148,5 @@ export function useBudgets() {
     return { success: true, count: importedCount };
   }, []);
 
-  return { budgets, loading, createBudget, deleteBudget, exportData, importData };
+  return { budgets, loading, createBudget, updateBudget, deleteBudget, exportData, importData };
 }

@@ -23,16 +23,19 @@ const DUE_DAYS_OPTIONS = [
 ];
 
 /**
- * Pantalla de creación de presupuesto.
- * Incluye buscador de clientes + formulario + tabla dinámica + PDF.
+ * Pantalla de creación/edición de presupuesto.
+ * Si recibe editBudget, pre-carga el formulario y al guardar
+ * llama a onUpdate en lugar de onSave.
  *
  * @param {{
  *   profile: object,
+ *   editBudget?: object | null,
  *   onBack: () => void,
  *   onSave: (data: object) => Promise<void>,
+ *   onUpdate?: (id: number, data: object) => Promise<void>,
  * }} props
  */
-export default function BudgetGenerator({ profile, onBack, onSave }) {
+export default function BudgetGenerator({ profile, editBudget, onBack, onSave, onUpdate }) {
   const { clients, createClient } = useClients();
 
   const [title, setTitle] = useState('');
@@ -46,6 +49,24 @@ export default function BudgetGenerator({ profile, onBack, onSave }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [newClientModalOpen, setNewClientModalOpen] = useState(false);
+
+  const isEditing = !!editBudget;
+
+  // ── Pre-cargar formulario cuando se edita ──
+  useEffect(() => {
+    if (editBudget) {
+      setTitle(editBudget.title || '');
+      setClientName(editBudget.clientName || '');
+      setClientId(editBudget.clientId || '');
+      setClientAddress(editBudget.clientAddress || '');
+      setDueDays(editBudget.dueDays ? String(editBudget.dueDays) : '');
+      setItems(
+        editBudget.items && editBudget.items.length > 0
+          ? editBudget.items
+          : [{ description: '', quantity: 1, unitPrice: 0 }],
+      );
+    }
+  }, [editBudget]);
 
   const total = calcTotal(items);
 
@@ -94,12 +115,19 @@ export default function BudgetGenerator({ profile, onBack, onSave }) {
         items,
         total,
       };
-      await onSave(data);
+      if (isEditing) {
+        await onUpdate(editBudget.id, data);
+      } else {
+        await onSave(data);
+      }
       setSaved(true);
       setTimeout(() => {
         resetForm();
         setSaved(false);
-      }, 1500);
+        if (isEditing) {
+          onBack(); // volver al dashboard después de editar
+        }
+      }, 1200);
     } catch (err) {
       console.error('Error saving budget:', err);
     } finally {
@@ -249,15 +277,6 @@ export default function BudgetGenerator({ profile, onBack, onSave }) {
         <div className="flex flex-col sm:flex-row gap-2 pt-2">
           <Button
             variant="secondary"
-            onClick={handlePrintPreview}
-            disabled={generatingPrint}
-            className="flex-1"
-          >
-            <Eye size={16} />
-            {generatingPrint ? 'Generando…' : 'Vista Previa'}
-          </Button>
-          <Button
-            variant="secondary"
             onClick={handleDownloadPDF}
             disabled={generatingPdf}
             className="flex-1"
@@ -271,7 +290,7 @@ export default function BudgetGenerator({ profile, onBack, onSave }) {
             className="flex-1"
           >
             <Save size={16} />
-            {saving ? 'Guardando…' : saved ? '✓ Guardado' : 'Guardar Presupuesto'}
+            {saving ? 'Guardando…' : saved ? (isEditing ? '✓ Actualizado' : '✓ Guardado') : isEditing ? 'Actualizar' : 'Guardar Presupuesto'}
           </Button>
         </div>
       </main>

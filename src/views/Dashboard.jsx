@@ -13,6 +13,7 @@ import BudgetDetailModal from '../components/features/BudgetDetailModal';
  *   profile: object,
  *   budgets: Array,
  *   onNewBudget: () => void,
+ *   onEditBudget: (budget: object) => void,
  *   onDeleteBudget: (id: number) => void,
  *   onExport: () => void,
  *   onImport: (file: File) => void,
@@ -24,6 +25,7 @@ export default function Dashboard({
   profile,
   budgets,
   onNewBudget,
+  onEditBudget,
   onDeleteBudget,
   onExport,
   onImport,
@@ -134,6 +136,7 @@ export default function Dashboard({
         profile={profile}
         open={!!selectedBudget}
         onClose={handleCloseDetail}
+        onEdit={onEditBudget}
       />
     </div>
   );

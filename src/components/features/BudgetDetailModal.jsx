@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileDown } from 'lucide-react';
+import { FileDown, Pencil } from 'lucide-react';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import { formatCurrency, formatDateShort } from '../../utils/formatters';
@@ -23,9 +23,10 @@ function addDays(isoDate, days) {
  *   profile: object,
  *   open: boolean,
  *   onClose: () => void,
+ *   onEdit?: (budget: object) => void,
  * }} props
  */
-export default function BudgetDetailModal({ budget, profile, open, onClose }) {
+export default function BudgetDetailModal({ budget, profile, open, onClose, onEdit }) {
   const [showSignatureSpace, setShowSignatureSpace] = useState(true);
   const [generatingPdf, setGeneratingPdf] = useState(false);
 
@@ -125,6 +126,14 @@ export default function BudgetDetailModal({ budget, profile, open, onClose }) {
 
           {/* ── Acciones ── */}
           <div className="flex gap-2 pt-1">
+            <Button
+              variant="secondary"
+              onClick={() => onEdit?.(budget)}
+              className="flex-1"
+            >
+              <Pencil size={16} />
+              Editar
+            </Button>
             <Button
               variant="secondary"
               onClick={handleDownloadPDF}

@@ -20,9 +20,10 @@ const VIEWS = {
 
 export default function App() {
   const { profile, loading: profileLoading, saveProfile, updateProfile } = useUserProfile();
-  const { budgets, loading: budgetsLoading, createBudget, deleteBudget, exportData, importData } = useBudgets();
+  const { budgets, loading: budgetsLoading, createBudget, updateBudget, deleteBudget, exportData, importData } = useBudgets();
 
   const [view, setView] = useState(VIEWS.LANDING);
+  const [editBudget, setEditBudget] = useState(null);
   const [importError, setImportError] = useState('');
   const [profileModalOpen, setProfileModalOpen] = useState(false);
 
@@ -68,7 +69,13 @@ export default function App() {
   };
 
   const handleBackToDashboard = () => {
+    setEditBudget(null);
     setView(VIEWS.DASHBOARD);
+  };
+
+  const handleEditBudget = (budget) => {
+    setEditBudget(budget);
+    setView(VIEWS.GENERATOR);
   };
 
   const handleSaveBudget = useCallback(
@@ -76,6 +83,14 @@ export default function App() {
       await createBudget(data);
     },
     [createBudget],
+  );
+
+  const handleUpdateBudget = useCallback(
+    async (id, data) => {
+      await updateBudget(id, data);
+      setEditBudget(null);
+    },
+    [updateBudget],
   );
 
   const handleExport = useCallback(async () => {
@@ -137,6 +152,7 @@ export default function App() {
             profile={profile}
             budgets={budgets}
             onNewBudget={handleNewBudget}
+            onEditBudget={handleEditBudget}
             onDeleteBudget={deleteBudget}
             onExport={handleExport}
             onImport={handleImport}
@@ -191,8 +207,10 @@ export default function App() {
       return (
         <BudgetGenerator
           profile={profile}
+          editBudget={editBudget}
           onBack={handleBackToDashboard}
           onSave={handleSaveBudget}
+          onUpdate={handleUpdateBudget}
         />
       );
 
